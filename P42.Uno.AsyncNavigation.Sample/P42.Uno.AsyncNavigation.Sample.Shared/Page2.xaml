@@ -1,0 +1,29 @@
+﻿<Page
+    x:Class="P42.Uno.AsyncNavigation.Sample.Shared.Page2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:P42.Uno.AsyncNavigation.Sample.Shared"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Content>
+        <Grid Background="Green">
+            <Grid.Children>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel.Children>
+                        <TextBlock Text="PAGE 2" />
+                        <Button
+                            x:Name="_forward"
+                            Click="_forwardsClick"
+                            Content="→ FORWARDS" />
+                        <Button
+                            x:Name="_backward"
+                            Click="_backwardsClick"
+                            Content="← BACKWARDS" />
+                    </StackPanel.Children>
+                </StackPanel>
+            </Grid.Children>
+        </Grid>
+    </Page.Content>
+</Page>
