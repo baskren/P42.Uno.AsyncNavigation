@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace P42.Uno.AsyncNavigation
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public partial class PagePresenter : Page
     {
         Guid Parameter;
@@ -26,12 +28,12 @@ namespace P42.Uno.AsyncNavigation
         private void PagePresenter_Loaded(object sender, RoutedEventArgs e)
         {
             _waitingForArrange = true;
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.Loaded");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.Loaded");
         }
 
         private void PagePresenter_Unloaded(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.Unloaded");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.Unloaded");
             if (Navigation.CurrentPage == Content)
             {
                 Navigation.PopCurrentMetaPage();
@@ -46,17 +48,18 @@ namespace P42.Uno.AsyncNavigation
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.ArrangeOverride("+finalSize+")  ENTER");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.ArrangeOverride("+finalSize+")  ENTER");
             var result =  base.ArrangeOverride(finalSize);
             if (_waitingForArrange && Content is Page page && page.GetArrangeTaskCompletedSource() is TaskCompletionSource<bool> tcs)
             {
                 page.SetArrangeTaskCompletedSource(null);
                 tcs.SetResult(true);
             }
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.ArrangeOverride(" + finalSize + ")  EXIT");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.ArrangeOverride(" + finalSize + ")  EXIT");
             return result;
         }
 
+        /*
         protected override void OnBringIntoViewRequested(BringIntoViewRequestedEventArgs e)
         {
             //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.OnBringIntoViewRequested[" + e.TargetElement+"] ENTER");
@@ -70,10 +73,11 @@ namespace P42.Uno.AsyncNavigation
             base.OnGotFocus(e);
             //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "] PagePresenter[" + Parameter+"].OnGotFocus EXIT");
         }
+        */
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Parameter + "] PagePresenter.OnNavigatedTo ENTER");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Parameter + "] PagePresenter.OnNavigatedTo ENTER");
             base.OnNavigatedTo(e);
 
             if (e.Parameter is null)
@@ -88,7 +92,7 @@ namespace P42.Uno.AsyncNavigation
             //Pages.Remove(key);
 
             Content = page;
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Parameter + "] PagePresenter.OnNavigatedTo EXIT");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Parameter + "] PagePresenter.OnNavigatedTo EXIT");
         }
 
         /*
@@ -98,21 +102,21 @@ namespace P42.Uno.AsyncNavigation
             base.OnNavigatedFrom(e);
             System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "]][" + e.Parameter + "] PagePresenter.OnNavigatedFrom EXIT");
         }
-        */
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "]][" + e.Parameter + "] PagePresenter.OnNavigatingFrom ENTER");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "]][" + e.Parameter + "] PagePresenter.OnNavigatingFrom ENTER");
             base.OnNavigatingFrom(e);
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "]][" + e.Parameter + "] PagePresenter.OnNavigatedFrom EXIT");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "]][" + e.Parameter + "] PagePresenter.OnNavigatedFrom EXIT");
         }
 
         protected override void PopulatePropertyInfoOverride(string propertyName, AnimationPropertyInfo animationPropertyInfo)
         {
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.PopulatePropertyInfoOverride[" + propertyName + "] ENTER ");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.PopulatePropertyInfoOverride[" + propertyName + "] ENTER ");
             base.PopulatePropertyInfoOverride(propertyName, animationPropertyInfo);
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.PopulatePropertyInfoOverride[" + propertyName + "] EXIT");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.PopulatePropertyInfoOverride[" + propertyName + "] EXIT");
         }
+        */
 
 
     }

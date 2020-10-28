@@ -14,6 +14,112 @@ namespace P42.Uno.AsyncNavigation
 {
     public static class Navigation
     {
+        #region Public Implementation
+
+        #region Properties
+        /// <summary>
+        /// How man pages are in the Async Navigation Stack?
+        /// </summary>
+        public static int StackCount => PageStack.Count;
+
+        /// <summary>
+        /// The current page on the Async Navigation Stack
+        /// </summary>
+        public static Page CurrentPage => CurrentMetaPage?.Page;
+
+        /// <summary>
+        /// A stopwatch that tracks the performance of PushAsync and PopAsync
+        /// </summary>
+        public static readonly Stopwatch Stopwatch = new Stopwatch();
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Push a page onto the Root Frame (Windows.UI.Xaml.Window.Current.Content)
+        /// </summary>
+        /// <param name="page">a pre-instantiated page</param>
+        /// <param name="transitionInfo">Controls how the transition animation runs during the navigation action.</param>
+        /// <returns>async Task to be awaited</returns>
+        public static async Task PushAsync(Page page, NavigationTransitionInfo transitionInfo = null)
+        {
+            if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
+                await PushAsync(frame, page, transitionInfo);
+            else
+                throw new Exception("Cannot find Application's root frame.");
+        }
+
+
+        /// <summary>
+        /// Push a page onto a Frame
+        /// </summary>
+        /// <param name="frame"></param>
+        /// <param name="page">a pre-instantiated page</param>
+        /// <param name="transitionInfo">Controls how the transition animation runs during the navigation action.</param>
+        /// <returns>async Task to be awaited</returns>
+        public static async Task PushAsync(this Frame frame, Page page, NavigationTransitionInfo transitionInfo = null)
+        {
+            if (page is null)
+                throw new ArgumentNullException("PushAsync page cannot be null.");
+
+            if (frame is null)
+                throw new ArgumentNullException("PushAsync frame cannot be null.");
+
+            frame.IsNavigationStackEnabled = true;
+            if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                Task oldTask = CurrentNavigationTask;
+                CurrentNavigationTask = tcs.Task;
+                await oldTask;
+            }
+
+            CurrentNavigationTask = PushAsyncInner(frame, page, transitionInfo);
+            await CurrentNavigationTask;
+            Stopwatch.Stop();
+        }
+
+        /// <summary>
+        /// Pop the page most recently pushed onto the AsyncNavigation stack (via AsyncNavigation.PushAsync)
+        /// </summary>
+        /// <returns></returns>
+        public static async Task PopAsync()
+        {
+            if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
+                await PopAsync(frame);
+            else
+                throw new Exception("Cannot find Application's root frame.");
+        }
+
+        /// <summary>
+        /// Pop the page most recently pushed onto the AsyncNavigation stack (via AsyncNavigation.PushAsync)
+        /// </summary>
+        /// <param name="frame"></param>
+        /// <returns></returns>
+        public static async Task PopAsync(this Frame frame)
+        {
+            if (frame is null)
+                throw new ArgumentNullException("PopAsync frame cannot be null.");
+
+            if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                Task oldTask = CurrentNavigationTask;
+                CurrentNavigationTask = tcs.Task;
+                await oldTask;
+            }
+
+            CurrentNavigationTask = PopAsyncInner(frame);
+            await CurrentNavigationTask;
+            Stopwatch.Stop();
+        }
+        #endregion
+
+        #endregion
+
+
+        #region Internal Implementation
+
+        #region Properties
 
         #region ArrangeTaskCompletedSource Property
         internal static readonly DependencyProperty ArrangeTaskCompletedSourceProperty = DependencyProperty.RegisterAttached(
@@ -28,7 +134,6 @@ namespace P42.Uno.AsyncNavigation
             => element.SetValue(ArrangeTaskCompletedSourceProperty, value);
         #endregion ArrangeTaskCompletedSource Property
 
-
         #region UnloadTaskCompletionSource Property
         internal static readonly DependencyProperty UnloadTaskCompletionSourceProperty = DependencyProperty.RegisterAttached(
             "UnloadTaskCompletionSource",
@@ -42,8 +147,26 @@ namespace P42.Uno.AsyncNavigation
             => element.SetValue(UnloadTaskCompletionSourceProperty, value);
         #endregion UnloadTaskCompletionSource Property
 
+        internal static void PopCurrentMetaPage()
+            => PageStack.Pop();
+
+        #endregion
+
+        #region Methods
+        internal static Page PageForGuid(Guid guid)
+        {
+            if (PageStack.FirstOrDefault(mp => mp.Guid == guid) is MetaPage metaPage)
+                return metaPage?.Page;
+            return null;
+        }
+        #endregion
+
+        #endregion
 
 
+        #region Private Implementation
+
+        #region Properties
         class MetaPage
         {
             public Guid Guid { get; private set; }
@@ -59,9 +182,7 @@ namespace P42.Uno.AsyncNavigation
 
         static Stack<MetaPage> PageStack = new Stack<MetaPage>();
 
-        public static int StackCount => PageStack.Count;
-
-        static Task CurrentNavigationTask;
+        static Task CurrentNavigationTask { get; set; }
 
         static MetaPage CurrentMetaPage
         {
@@ -73,104 +194,15 @@ namespace P42.Uno.AsyncNavigation
             }
         }
 
-        internal static void PopCurrentMetaPage()
-            => PageStack.Pop();
-
         static Guid? CurrentPageGuid => CurrentMetaPage?.Guid;
 
-        public static Page CurrentPage => CurrentMetaPage?.Page;
-
-        public static readonly Stopwatch Stopwatch = new Stopwatch();
-
-        internal static Page PageForGuid(Guid guid)
-        {
-            if (PageStack.FirstOrDefault(mp => mp.Guid == guid) is MetaPage metaPage)
-                return metaPage?.Page;
-            return null;
-                
-        }
-
-        static Navigation()
-        {
-            if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
-            {
-                frame.Navigated += Frame_Navigated;
-                frame.Navigating += Frame_Navigating;
-                frame.NavigationFailed += Frame_NavigationFailed;
-                frame.NavigationStopped += Frame_NavigationStopped;
-            }
-        }
-
-        private static void Frame_NavigationStopped(object sender, NavigationEventArgs e)
-        {
-
-            System.Diagnostics.Debug.WriteLine("["+Navigation.Stopwatch.ElapsedMilliseconds+ "][" + e.Parameter + "] Navigation.Frame_NavigationStopped mode[" + e.NavigationMode + "] content[" + e.Content + "] uri[" + e.Uri + "]");
-        }
-
-        private static void Frame_NavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Exception + "] Navigation.Frame_NavigationFailed[" + e.Handled + "]");
-        }
-
-        private static void Frame_Navigating(object sender, NavigatingCancelEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Parameter + "] Navigation.Frame_Navigating[" + e.NavigationMode + "][" + e.Cancel + "]");
-        }
-
-        private static void Frame_Navigated(object sender, NavigationEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Parameter + "] Navigation.Frame_Navigated[" + e.NavigationMode+"]["+e.Content+"]["+e.Uri+"]");
-        }
-
-        public static async Task PushAsync(Page page)
-        {
-            if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
-                await frame.PushAsync(page);
-            else
-                throw new Exception("Cannot find Application's root frame.");
-        }
-
-        public static async Task PushAsync(this Frame frame, Page page, NavigationTransitionInfo transitionInfo = null)
-        {
-            frame.IsNavigationStackEnabled = true;
-            if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
-            {
-                var tcs = new TaskCompletionSource<bool>();
-                Task oldTask = CurrentNavigationTask;
-                CurrentNavigationTask = tcs.Task;
-                await oldTask;
-            }
-
-            CurrentNavigationTask = PushAsyncInner(frame, page, transitionInfo);
-            await CurrentNavigationTask;
-        }
-
-        public static async Task PopAsync()
-        {
-            if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
-                await frame.PopAsync();
-            else
-                throw new Exception("Cannot find Application's root frame.");
-        }
-
-        public static async Task PopAsync(this Frame frame)
-        {
-            if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
-            {
-                var tcs = new TaskCompletionSource<bool>();
-                Task oldTask = CurrentNavigationTask;
-                CurrentNavigationTask = tcs.Task;
-                await oldTask;
-            }
-
-            CurrentNavigationTask = PopAsyncInner(frame);
-            await CurrentNavigationTask;
-        }
+        #endregion
 
 
+        #region Methods
         static async Task<bool> PushAsyncInner(Frame frame, Page page, NavigationTransitionInfo transitionInfo)
         {
-            if (PageStack.Any(pair=>pair.Page == page))
+            if (PageStack.Any(pair => pair.Page == page))
                 return false;
 
             Stopwatch.Reset();
@@ -228,6 +260,46 @@ namespace P42.Uno.AsyncNavigation
 
             return new Size(frameW, frameH);
         }
-        
+        #endregion
+
+        #endregion
+
+
+        #region Delete Me!
+        /*
+        static Navigation()
+        {
+            if (Windows.UI.Xaml.Window.Current.Content is Frame frame)
+            {
+                frame.Navigated += Frame_Navigated;
+                frame.Navigating += Frame_Navigating;
+                frame.NavigationFailed += Frame_NavigationFailed;
+                frame.NavigationStopped += Frame_NavigationStopped;
+            }
+        }
+
+        private static void Frame_NavigationStopped(object sender, NavigationEventArgs e)
+        {
+
+            System.Diagnostics.Debug.WriteLine("["+Navigation.Stopwatch.ElapsedMilliseconds+ "][" + e.Parameter + "] Navigation.Frame_NavigationStopped mode[" + e.NavigationMode + "] content[" + e.Content + "] uri[" + e.Uri + "]");
+        }
+
+        private static void Frame_NavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Exception + "] Navigation.Frame_NavigationFailed[" + e.Handled + "]");
+        }
+
+        private static void Frame_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Parameter + "] Navigation.Frame_Navigating[" + e.NavigationMode + "][" + e.Cancel + "]");
+        }
+
+        private static void Frame_Navigated(object sender, NavigationEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Parameter + "] Navigation.Frame_Navigated[" + e.NavigationMode+"]["+e.Content+"]["+e.Uri+"]");
+        }
+        */
+        #endregion
+
     }
 }
