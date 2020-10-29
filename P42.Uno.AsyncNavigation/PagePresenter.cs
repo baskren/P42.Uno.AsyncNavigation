@@ -42,7 +42,10 @@ namespace P42.Uno.AsyncNavigation
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            var result =  base.ArrangeOverride(finalSize);
+            var result = finalSize;
+            if (Parent != null)
+                result =  base.ArrangeOverride(finalSize);
+
             if (this.GetArrangedTaskCompletionSource() is TaskCompletionSource<bool> tcs)
             {
                 this.SetArrangedTaskCompletionSource(null);
