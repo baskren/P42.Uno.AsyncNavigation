@@ -31,11 +31,12 @@ namespace P42.Uno.AsyncNavigation.Sample
 
         async void _forwardsClick(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "] MainPage._forwardsClick ENTER ["+Navigation.StackCount + "]");
+            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] MainPage._forwardsClick ENTER ["+this.NavigationPage().StackCount + "]");
 
             var page = new Page1();
-            await P42.Uno.AsyncNavigation.Navigation.PushAsync(page);
-            System.Diagnostics.Debug.WriteLine("["+Navigation.Stopwatch.ElapsedMilliseconds+ "] MainPage._forwardsClick EXIT  [" + Navigation.StackCount + "]");
+            //await P42.Uno.AsyncNavigation.Navigation.PushAsync(page);
+            await this.PushAsync(page);
+            System.Diagnostics.Debug.WriteLine("["+ NavigationPage.Stopwatch.ElapsedMilliseconds+ "] MainPage._forwardsClick EXIT  [" + this.NavigationPage().StackCount + "]");
         }
     }
 }

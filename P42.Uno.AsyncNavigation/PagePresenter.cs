@@ -16,24 +16,37 @@ namespace P42.Uno.AsyncNavigation
     [EditorBrowsable(EditorBrowsableState.Never)]
     public partial class PagePresenter : Page
     {
-        Guid Parameter;
-        bool _waitingForArrange;
+        bool _waitingForLoad;
 
         public PagePresenter()
         {
-            Unloaded += PagePresenter_Unloaded;
+            //Unloaded += PagePresenter_Unloaded;
             Loaded += PagePresenter_Loaded;
+            _waitingForLoad = true;
+        }
+
+        public PagePresenter(Page page) : this()
+        {
+            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] PagePresenter.ctor ENTER page:["+page.GetType()+"]");
+            Content = page;
+            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] PagePresenter.ctor EXIT page:[" + page.GetType() + "]");
         }
 
         private void PagePresenter_Loaded(object sender, RoutedEventArgs e)
         {
-            _waitingForArrange = true;
-            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.Loaded");
+            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] PagePresenter.Loaded  ENTER content:[" + Content.GetType() + "]");
+            if (_waitingForLoad && this.GetLoadedTaskCompletedSource() is TaskCompletionSource<bool> tcs)
+            {
+                this.SetLoadedTaskCompletedSource(null);
+                tcs.SetResult(true);
+            }
+            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] PagePresenter.Loaded  EXIT content:[" + Content.GetType() + "]");
         }
 
+        /*
         private void PagePresenter_Unloaded(object sender, RoutedEventArgs e)
         {
-            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.Unloaded");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "] PagePresenter.Unloaded");
             if (Navigation.CurrentPage == Content)
             {
                 Navigation.PopCurrentMetaPage();
@@ -44,36 +57,35 @@ namespace P42.Uno.AsyncNavigation
                 tcs.SetResult(true);
             }
             Content = null;
-        }
+        }*/
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.ArrangeOverride("+finalSize+")  ENTER");
+            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] PagePresenter.ArrangeOverride("+finalSize+")  ENTER content:["+Content.GetType()+"]");
             var result =  base.ArrangeOverride(finalSize);
-            if (_waitingForArrange && Content is Page page && page.GetArrangeTaskCompletedSource() is TaskCompletionSource<bool> tcs)
+            if (this.GetArrangedTaskCompletionSource() is TaskCompletionSource<bool> tcs)
             {
-                page.SetArrangeTaskCompletedSource(null);
+                this.SetArrangedTaskCompletionSource(null);
                 tcs.SetResult(true);
             }
-            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.ArrangeOverride(" + finalSize + ")  EXIT");
+            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] PagePresenter.ArrangeOverride(" + finalSize + ")  EXIT content:[" + Content.GetType() + "]");
             return result;
         }
 
         /*
         protected override void OnBringIntoViewRequested(BringIntoViewRequestedEventArgs e)
         {
-            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.OnBringIntoViewRequested[" + e.TargetElement+"] ENTER");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "] PagePresenter.OnBringIntoViewRequested[" + e.TargetElement+"] ENTER");
             base.OnBringIntoViewRequested(e);
-            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.OnBringIntoViewRequested[" + e.TargetElement+"] EXIT");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "] PagePresenter.OnBringIntoViewRequested[" + e.TargetElement+"] EXIT");
         }
 
         protected override void OnGotFocus(RoutedEventArgs e)
         {
-            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.OnGotFocus ENTER");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "] PagePresenter.OnGotFocus ENTER");
             base.OnGotFocus(e);
             //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "] PagePresenter[" + Parameter+"].OnGotFocus EXIT");
         }
-        */
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -88,12 +100,13 @@ namespace P42.Uno.AsyncNavigation
 
             // Find the page instance in the dictionary and then discard it so we don't prevent it from being collected
             var key = Parameter = (Guid)e.Parameter;
-            var page = Navigation.PageForGuid(key);
+            var page = NavigationPage.PageForGuid(key);
             //Pages.Remove(key);
 
             Content = page;
             //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + e.Parameter + "] PagePresenter.OnNavigatedTo EXIT");
         }
+                */
 
         /*
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -112,9 +125,9 @@ namespace P42.Uno.AsyncNavigation
 
         protected override void PopulatePropertyInfoOverride(string propertyName, AnimationPropertyInfo animationPropertyInfo)
         {
-            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.PopulatePropertyInfoOverride[" + propertyName + "] ENTER ");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "] PagePresenter.PopulatePropertyInfoOverride[" + propertyName + "] ENTER ");
             base.PopulatePropertyInfoOverride(propertyName, animationPropertyInfo);
-            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "][" + Parameter + "] PagePresenter.PopulatePropertyInfoOverride[" + propertyName + "] EXIT");
+            //System.Diagnostics.Debug.WriteLine("[" + Navigation.Stopwatch.ElapsedMilliseconds + "] PagePresenter.PopulatePropertyInfoOverride[" + propertyName + "] EXIT");
         }
         */
 
