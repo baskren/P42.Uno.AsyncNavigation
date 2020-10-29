@@ -37,7 +37,6 @@ namespace P42.Uno.AsyncNavigation
             => element.SetValue(UnloadTaskCompletionSourceProperty, value);
         #endregion UnloadTaskCompletionSource Property
 
-
         #region ArrangedTaskCompletionSource Property
         internal static readonly DependencyProperty ArrangedTaskCompletionSourceProperty = DependencyProperty.RegisterAttached(
             "ArrangedTaskCompletionSource",

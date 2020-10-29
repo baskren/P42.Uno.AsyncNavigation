@@ -25,9 +25,6 @@ namespace P42.Uno.AsyncNavigation
     /// </summary>
     public sealed partial class NavigationPanel : Panel
     {
-        //static NavigationPanel _current;
-        //public static NavigationPanel Current => _current = _current ?? new NavigationPanel();
-
         readonly static Point Origin = new Point();
         internal Stack<PagePresenter> BackStack = new Stack<PagePresenter>();
         internal PagePresenter CurrentPagePresenter;
@@ -43,7 +40,7 @@ namespace P42.Uno.AsyncNavigation
         public NavigationPanel()
         {
             // is this redundant?
-            SizeChanged += OnSizeChanged;
+            //SizeChanged += OnSizeChanged;
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -108,7 +105,6 @@ namespace P42.Uno.AsyncNavigation
 
         async Task<bool> PushAsyncInner(Page page)
         {
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsyncInner ENTER  page:" + page);
             foreach (var child in ForewardStack)
                 Children.Remove(child);
             ForewardStack.Clear();
@@ -125,28 +121,22 @@ namespace P42.Uno.AsyncNavigation
 
             Children.Add(presenter);
 
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsyncInner A  page:" + page);
             await tcs.Task;
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsyncInner A'  page:" + page);
-
             
             if (ForewardStack.Any())
             {
                 BackStack.Push(CurrentPagePresenter);
                 CurrentPagePresenter = ForewardStack.Pop();
-                //ArrangePages(new Size(ActualWidth, ActualHeight));
-                System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsyncInner B  page:" + page);
                 if (IsAnimated)
                 {
-                    var x = ActualWidth;
-                    while (x > 0)
-                    {
-                        await Task.Delay(20);
-                        x -= 100;
-                        if (x < 0)
-                            x = 0;
-                        CurrentPagePresenter.Arrange(new Rect(new Point(x, 0), new Size(ActualWidth, ActualHeight)));
-                    }
+                    var size = new Size(ActualWidth, ActualHeight);
+                    var animator = new ActionAnimator(ActualWidth, 0,
+                                            TimeSpan.FromMilliseconds(300),
+                                            //new ExponentialEase { Exponent=7.0, EasingMode = EasingMode.EaseOut  },
+                                            new CubicEase { EasingMode = EasingMode.EaseOut },
+                                            x => CurrentPagePresenter.Arrange(new Rect(new Point(x, 0), size))
+                                            );
+                    await animator.RunAsync();
                 }
                 else
                 {
@@ -156,11 +146,7 @@ namespace P42.Uno.AsyncNavigation
 
                     await tcs.Task;
                 }
-                System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsyncInner B'  page:" + page);
             }
-
-
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsyncInner EXIT  page:" + page);
             return true;
         }
 
@@ -169,7 +155,6 @@ namespace P42.Uno.AsyncNavigation
             if (!BackStack.Any())
                 return false;
 
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PopAsyncInner ENTER  page:" + CurrentPage);
             if (CurrentPagePresenter is PagePresenter presenter)
             {
                 ForewardStack.Push(CurrentPagePresenter);
@@ -177,17 +162,13 @@ namespace P42.Uno.AsyncNavigation
 
                 if (IsAnimated)
                 {
-                    System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsyncInner A  page:" + presenter.Content);
-                    var x = 0.0;
-                    while (x < ActualWidth)
-                    {
-                        await Task.Delay(20);
-                        x += 100;
-                        if (x > ActualWidth)
-                            x = ActualWidth;
-                        presenter.Arrange(new Rect(new Point(x, 0), new Size(ActualWidth, ActualHeight)));
-                    }
-                    System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsyncInner A'  page:" + presenter.Content);
+                    var size = new Size(ActualWidth, ActualHeight);
+                    var animator = new ActionAnimator(0, ActualWidth,
+                                            TimeSpan.FromMilliseconds(150),
+                                            new CubicEase { EasingMode = EasingMode.EaseOut },
+                                            x => presenter.Arrange(new Rect(new Point(x, 0), size))
+                                            );
+                    await animator.RunAsync();
                 }
 
                 var tcs = new TaskCompletionSource<bool>();
@@ -195,14 +176,9 @@ namespace P42.Uno.AsyncNavigation
 
                 Children.Remove(presenter);
 
-                System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PopAsyncInner B  page:" + presenter.Content);
                 var result = await tcs.Task;
-                System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PopAsyncInner B'  page:" + presenter.Content);
-
                 return result;
             }
-
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PopAsyncInner ENTER  page:" + CurrentPage);
             return false;
         }
     }

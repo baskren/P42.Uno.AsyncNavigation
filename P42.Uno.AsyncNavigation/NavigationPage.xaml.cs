@@ -73,7 +73,6 @@ namespace P42.Uno.AsyncNavigation
         /// <returns>async Task to be awaited</returns>
         public async Task<bool> PushAsync(Page page, NavigationTransitionInfo transitionInfo = null)
         {
-            System.Diagnostics.Debug.WriteLine("NavigationPage.PushAsync ENTER  page:["+page+"]");
             if (page is null)
                 throw new ArgumentNullException("PushAsync page cannot be null.");
 
@@ -97,7 +96,6 @@ namespace P42.Uno.AsyncNavigation
         /// <returns></returns>
         public async Task<bool> PopAsync()
         {
-            System.Diagnostics.Debug.WriteLine("NavigationPage.PopAsync ENTER  page:[" + CurrentPage + "]");
             if (_navPanel.CanGoBack)
             {
                 Stopwatch.Reset();
