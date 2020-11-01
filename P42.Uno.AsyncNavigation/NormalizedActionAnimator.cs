@@ -18,7 +18,7 @@ namespace P42.Uno.AsyncNavigation
 
         protected DateTime StartTime;
 
-        public NormalizedActionAnimator(TimeSpan timeSpan, EasingFunctionBase easingFunction, Action<double> action)
+        public NormalizedActionAnimator(TimeSpan timeSpan, Action<double> action, EasingFunctionBase easingFunction = null)
         {
             TimeSpan = timeSpan;
             EasingFunction = easingFunction;
@@ -33,7 +33,7 @@ namespace P42.Uno.AsyncNavigation
             {
                 await Task.Delay(10);
                 normalTime = Math.Min((DateTime.Now - StartTime).TotalMilliseconds / TimeSpan.TotalMilliseconds,1.0);
-                var normalValue = EasingFunction.Ease(normalTime);
+                var normalValue = EasingFunction?.Ease(normalTime) ?? normalTime;
                 var value = Value(normalValue);
                 Action(value);
             }

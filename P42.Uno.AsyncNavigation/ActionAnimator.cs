@@ -15,8 +15,8 @@ namespace P42.Uno.AsyncNavigation
 
 
 
-        public ActionAnimator(double from, double to, TimeSpan timeSpan, EasingFunctionBase easingFunction, Action<double> action)
-            : base(timeSpan, easingFunction, action)
+        public ActionAnimator(double from, double to, TimeSpan timeSpan, Action<double> action, EasingFunctionBase easingFunction = null)
+            : base(timeSpan, action, easingFunction)
         {
             From = from;
             To = to;

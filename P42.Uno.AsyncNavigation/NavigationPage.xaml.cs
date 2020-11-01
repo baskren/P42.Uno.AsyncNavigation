@@ -74,10 +74,12 @@ namespace P42.Uno.AsyncNavigation
         public async Task<bool> PushAsync(Page page, NavigationTransitionInfo transitionInfo = null)
         {
             if (page is null)
-                throw new ArgumentNullException("PushAsync page cannot be null.");
+                throw new ArgumentNullException("P42.Uno.AsyncNavigation.PushAsync page cannot be null.");
 
             if (_navPanel.Children.Any(c => c is Page p && p.Content == page))
                 return false;
+
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPage.PushAsync ENTER  page:[" + page + "]");
 
             Stopwatch.Reset();
             Stopwatch.Start();
@@ -86,7 +88,7 @@ namespace P42.Uno.AsyncNavigation
 
             Stopwatch.Stop();
 
-            System.Diagnostics.Debug.WriteLine("NavigationPage.PushAsync EXIT  page:[" + page + "]");
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPage.PushAsync EXIT  page:[" + page + "]");
             return result;
         }
 
@@ -101,46 +103,19 @@ namespace P42.Uno.AsyncNavigation
                 Stopwatch.Reset();
                 Stopwatch.Start();
 
+                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPage.PopAsync ENTER  page:[" + CurrentPage + "]");
                 if (_navPanel.CurrentPagePresenter is PagePresenter page)
                 {
                     await _navPanel.PopAsync();
-                    System.Diagnostics.Debug.WriteLine("NavigationPage.PopAsync EXIT  page:[" + CurrentPage + "]");
+                    //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPage.PopAsync EXIT  page:[" + CurrentPage + "]");
                     return true;
                 }
             }
-            System.Diagnostics.Debug.WriteLine("NavigationPage.PopAsync EXIT  page:[" + CurrentPage + "]");
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPage.PopAsync EXIT  page:[" + CurrentPage + "]");
             return false;
         }
         #endregion
 
-
-        #endregion
-
-
-        /*
-        #region Internal Implementation
-
-        internal static Page PageForGuid(Guid guid)
-        {
-            if (PageStack.FirstOrDefault(mp => mp.Guid == guid) is MetaPage metaPage)
-                return metaPage?.Page;
-            return null;
-        }
-
-        #endregion
-        */
-
-        #region Private Implementation
-
-        #region Properties
-
-        #endregion
-
-
-        #region Methods
-
-
-        #endregion
 
         #endregion
 

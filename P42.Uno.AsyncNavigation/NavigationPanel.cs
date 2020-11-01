@@ -80,31 +80,33 @@ namespace P42.Uno.AsyncNavigation
             if (page is null)
                 return false;
 
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsync ENTER  page:" + page);
+            //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PushAsync ENTER  page:" + page);
             if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
                 await CurrentNavigationTask;
 
             CurrentNavigationTask = PushAsyncInner(page);
             var result = await CurrentNavigationTask;
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsync EXIT  page:" + page);
+            //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PushAsync EXIT  page:" + page);
             return result;
         }
 
         public async Task<bool> PopAsync()
         {
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsync ENTER  page:" + CurrentPage);
+            //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PopAsync ENTER  page:" + CurrentPage);
             if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
                 await CurrentNavigationTask;
 
             CurrentNavigationTask = PopAsyncInner();
             var result =  await CurrentNavigationTask;
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] NavigationPanel.PushAsync EXIT  page:" + CurrentPage);
+            //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PopAsync EXIT  page:" + CurrentPage);
             return result;
         }
 
 
         async Task<bool> PushAsyncInner(Page page)
         {
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner ENTER [" + page.Content+"]");
+
             foreach (var child in ForewardStack)
                 Children.Remove(child);
             ForewardStack.Clear();
@@ -119,10 +121,13 @@ namespace P42.Uno.AsyncNavigation
             var tcs = new TaskCompletionSource<bool>();
             presenter.SetLoadedTaskCompletedSource(tcs);
 
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner A1 [" + page.Content + "]");
             Children.Add(presenter);
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner A2 [" + page.Content + "]");
 
             await tcs.Task;
-            
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner A3 [" + page.Content + "]");
+
             if (ForewardStack.Any())
             {
                 BackStack.Push(CurrentPagePresenter);
@@ -132,9 +137,9 @@ namespace P42.Uno.AsyncNavigation
                     var size = new Size(ActualWidth, ActualHeight);
                     var animator = new ActionAnimator(ActualWidth, 0,
                                             TimeSpan.FromMilliseconds(300),
-                                            //new ExponentialEase { Exponent=7.0, EasingMode = EasingMode.EaseOut  },
-                                            new CubicEase { EasingMode = EasingMode.EaseOut },
                                             x => CurrentPagePresenter.Arrange(new Rect(new Point(x, 0), size))
+                                            //new ExponentialEase { Exponent=7.0, EasingMode = EasingMode.EaseOut  },
+                                            //new CubicEase { EasingMode = EasingMode.EaseOut },
                                             );
                     await animator.RunAsync();
                 }
@@ -147,6 +152,7 @@ namespace P42.Uno.AsyncNavigation
                     await tcs.Task;
                 }
             }
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner EXIT [" + page.Content + "]");
             return true;
         }
 
@@ -155,6 +161,8 @@ namespace P42.Uno.AsyncNavigation
             if (!BackStack.Any())
                 return false;
 
+
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner ENTER [" + CurrentPage + "]");
             if (CurrentPagePresenter is PagePresenter presenter)
             {
                 ForewardStack.Push(CurrentPagePresenter);
@@ -165,20 +173,26 @@ namespace P42.Uno.AsyncNavigation
                     var size = new Size(ActualWidth, ActualHeight);
                     var animator = new ActionAnimator(0, ActualWidth,
                                             TimeSpan.FromMilliseconds(150),
-                                            new CubicEase { EasingMode = EasingMode.EaseOut },
                                             x => presenter.Arrange(new Rect(new Point(x, 0), size))
+                                            //new CubicEase { EasingMode = EasingMode.EaseOut },
                                             );
                     await animator.RunAsync();
                 }
 
+                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner A [" + presenter.Content + "]");
                 var tcs = new TaskCompletionSource<bool>();
-                presenter.SetArrangedTaskCompletionSource(tcs);
+                presenter.SetUnloadTaskCompletionSource(tcs);
 
+                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner B [" + presenter.Content + "]");
                 Children.Remove(presenter);
 
+                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner C [" + presenter.Content + "]");
                 var result = await tcs.Task;
+
+                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner EXIT' [" + presenter.Content + "]");
                 return result;
             }
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner EXIT [" + CurrentPage + "]");
             return false;
         }
     }

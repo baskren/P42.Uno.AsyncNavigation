@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace P42.Uno.AsyncNavigation
 {
+    [System.ComponentModel.Bindable(System.ComponentModel.BindableSupport.Yes)]
     public static class NavigationExtensions
     {
         #region LoadedTaskCompletionSource Property
@@ -54,6 +55,7 @@ namespace P42.Uno.AsyncNavigation
 
         public static async Task<bool> PushAsync(this FrameworkElement currentElement, Page page, NavigationTransitionInfo transitionInfo = null)
         {
+            await Task.Delay(5);
             if (NavigationPage(currentElement) is NavigationPage navPage)
                 return await navPage.PushAsync(page, transitionInfo);
             else
