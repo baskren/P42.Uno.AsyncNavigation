@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.AsyncNavigation
 {
@@ -35,6 +37,7 @@ namespace P42.Uno.AsyncNavigation
 
         public PagePresenter(Page page) : this()
         {
+            Background = new SolidColorBrush((Color)Application.Current.Resources["SystemAltHighColor"]);
             Content = page;
         }
 
