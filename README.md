@@ -24,31 +24,33 @@ First you will need to reference, in your project, `P42.Uno.AsyncNavigation` as 
 Next, similar to `NavigationPage` in Xamarin.Forms, in order to use **AsyncNavigation**, the root page of your application needs to be a `P42.Uno.AsyncNavigation.NavigationPage`.  In UWP / Uno apps, this means opening up `App.xsml.cs` and replacing the following default code ...
 
 ```csharp
-			if (e.PrelaunchActivated == false)
-			{
-				if (rootFrame.Content == null)
-				{
-					// When the navigation stack isn't restored navigate to the first page,
-					// configuring the new page by passing required information as a navigation
-					// parameter
-					rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                }
-            }
+if (e.PrelaunchActivated == false)
+{
+    if (rootFrame.Content == null)
+    {
+        // When the navigation stack isn't restored navigate to the first page,
+        // configuring the new page by passing required information as a navigation
+        // parameter
+        rootFrame.Navigate(typeof(MainPage), e.Arguments);
+        }
+    }
+}
 ```
 
 ... with the below:
 
 ```csharp
-			if (e.PrelaunchActivated == false)
-			{
-				if (rootFrame.Content == null)
-				{
-					// When the navigation stack isn't restored navigate to the first page,
-					// configuring the new page by passing required information as a navigation
-					// parameter
-					rootFrame.Navigate(typeof(P42.Uno.AsyncNavigation.NavigationPage), typeof(MainPage));
-                }
-            }
+if (e.PrelaunchActivated == false)
+{
+    if (rootFrame.Content == null)
+    {
+        // When the navigation stack isn't restored navigate to the first page,
+        // configuring the new page by passing required information as a navigation
+        // parameter
+        rootFrame.Navigate(typeof(P42.Uno.AsyncNavigation.NavigationPage), typeof(MainPage));
+        }
+    }
+}
 ```
 
 This sets the root of your project to a `P42.Uno.AsyncNavigation.NavigationPage`, creates an instance of `MainPage`, and places that instance of `MainPage` onto the navigation stack.
