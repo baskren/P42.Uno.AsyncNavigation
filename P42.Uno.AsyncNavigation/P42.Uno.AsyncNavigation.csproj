@@ -18,8 +18,8 @@
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
     <PackageId>P42.Uno.AsyncNavigation</PackageId>
-    <PackageVersion>0.1.0-pre2</PackageVersion>
-    <Version>0.1.0-pre2</Version>
+    <PackageVersion>0.1.0</PackageVersion>
+    <Version>0.1.0</Version>
     <Authors>42nd Parallel</Authors>
     <Description>P42.Uno.AsyncNavigation: "Xamarin.Forms like" Asynchronous navigation for pre-instantiated UWP / Uno page content</Description>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
