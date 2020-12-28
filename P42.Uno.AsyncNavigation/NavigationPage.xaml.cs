@@ -69,9 +69,9 @@ namespace P42.Uno.AsyncNavigation
         /// Push a page onto the Root Frame (Windows.UI.Xaml.Window.Current.Content)
         /// </summary>
         /// <param name="page">a pre-instantiated page</param>
-        /// <param name="transitionInfo">Controls how the transition animation runs during the navigation action.</param>
+        /// <param name="pageAnimationOptions">Controls how the transition animation runs during the navigation action.</param>
         /// <returns>async Task to be awaited</returns>
-        public async Task<bool> PushAsync(Page page, NavigationTransitionInfo transitionInfo = null)
+        public async Task<bool> PushAsync(Page page, PageAnimationOptions pageAnimationOptions = null)
         {
             if (page is null)
                 throw new ArgumentNullException("P42.Uno.AsyncNavigation.PushAsync page cannot be null.");
@@ -84,7 +84,7 @@ namespace P42.Uno.AsyncNavigation
             Stopwatch.Reset();
             Stopwatch.Start();
 
-            var result = await _navPanel.PushAsync(page);
+            var result = await _navPanel.PushAsync(page, pageAnimationOptions);
 
             Stopwatch.Stop();
 
@@ -95,8 +95,9 @@ namespace P42.Uno.AsyncNavigation
         /// <summary>
         /// Pop the page most recently pushed onto the AsyncNavigation stack (via AsyncNavigation.PushAsync)
         /// </summary>
+        /// <param name="pageAnimationOptions">Controls how the transition animation runs during the navigation action.</param>
         /// <returns></returns>
-        public async Task<bool> PopAsync()
+        public async Task<bool> PopAsync(PageAnimationOptions pageAnimationOptions = null)
         {
             if (_navPanel.CanGoBack)
             {
@@ -106,7 +107,7 @@ namespace P42.Uno.AsyncNavigation
                 //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPage.PopAsync ENTER  page:[" + CurrentPage + "]");
                 if (_navPanel.CurrentPagePresenter is PagePresenter page)
                 {
-                    await _navPanel.PopAsync();
+                    await _navPanel.PopAsync(pageAnimationOptions);
                     //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPage.PopAsync EXIT  page:[" + CurrentPage + "]");
                     return true;
                 }

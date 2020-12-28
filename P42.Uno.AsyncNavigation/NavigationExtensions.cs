@@ -67,19 +67,19 @@ namespace P42.Uno.AsyncNavigation
 
 
 
-        public static async Task<bool> PushAsync(this FrameworkElement currentElement, Page page, NavigationTransitionInfo transitionInfo = null)
+        public static async Task<bool> PushAsync(this FrameworkElement currentElement, Page page, PageAnimationOptions pageAnimationOptions = null)
         {
             await Task.Delay(5);
             if (NavigationPage(currentElement) is NavigationPage navPage)
-                return await navPage.PushAsync(page, transitionInfo);
+                return await navPage.PushAsync(page, pageAnimationOptions);
             else
                 throw new ArgumentException("Current page must either a NavigationPage or a child of a NavigationPage.");
         }
 
-        public static async Task<bool> PopAsync(this FrameworkElement currentElement)
+        public static async Task<bool> PopAsync(this FrameworkElement currentElement, PageAnimationOptions pageAnimationOptions = null)
         {
             if (NavigationPage(currentElement) is NavigationPage navPage)
-                return await navPage.PopAsync();
+                return await navPage.PopAsync(pageAnimationOptions);
             else
                 throw new ArgumentException("Current page must either a NavigationPage or a child of a NavigationPage.");
         }
