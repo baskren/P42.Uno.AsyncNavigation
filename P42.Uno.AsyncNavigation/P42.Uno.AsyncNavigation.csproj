@@ -9,21 +9,21 @@
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
-    <PackageId>P42.Uno.Essentials</PackageId>
-    <PackageIcon>icon.png</PackageIcon>
-    <Summary>P42.Uno.Essentials: Essentials APIs for Uno iOS, Android, MacOS, UWP, Tizen, and Wasm applications</Summary>
-    <PackageTags>uno, windows, uwp, ios, android, tizen, toolkit, uno-platform, kit</PackageTags>
-    <Title>P42.Uno.Essentials</Title>
-    <Description>P42.Uno.Essentials: a kit of essential API's for your Uno-Platform apps</Description>
+    <PackageId>P42.Uno.AsyncNavigation</PackageId>
+    <PackageIcon>..\Assets\icon.png</PackageIcon>
+    <Summary>P42.Uno.AsyncNavigation: "Xamarin.Forms like" Asynchronous navigation for pre-instantiated UWP / Uno page content</Summary>
+    <PackageTags>uno, windows, uwp, ios, android, tizen, async navigation, uno-platform, page navigation</PackageTags>
+    <Title>P42.Uno.AsyncNavigation</Title>
+    <Description>P42.Uno.AsyncNavigation: "Xamarin.Forms like" Asynchronous navigation for pre-instantiated UWP / Uno page content</Description>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
-    <Version>1.0.0</Version>
-    <PackageVersion>1.0.0</PackageVersion>
-    <Authors>Microsoft, 42nd Parallel</Authors>
-    <Owners>microsoft,Xamarin,XamarinNuGet, 42nd Parallel</Owners>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <AssemblyFileVersion>0.1.0.0</AssemblyFileVersion>
+    <Version>0.1.0</Version>
+    <PackageVersion>0.1.0</PackageVersion>
+    <Authors>42nd Parallel</Authors>
+    <Owners>42nd Parallel</Owners>
     <NeutralLanguage>en</NeutralLanguage>
-    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <Copyright>© 42nd Parallel. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/baskren/P42.Uno.AsyncNavigation</RepositoryUrl>
     <!--UseFullSemVerForNuGet>false</UseFullSemVerForNuGet-->
 
@@ -68,17 +68,10 @@
   <ItemGroup>
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
-  <!--
-  <ItemGroup>
-    <None Remove="NavigationPage.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <UpToDateCheckInput Remove="NavigationPage.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="NavigationPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  -->
+  <PropertyGroup>
+    <PostBuildEvent Condition=" '$(Configuration)'=='Release' And  '$(OS)'=='Windows_NT'  And '$(SolutionName)'=='P42.Uno.AsyncNavigation' ">
+      mkdir "$(SolutionDir)NuGet\lib" 
+      xcopy "$(TargetDir)P42.Uno.AsyncNavigation.*"  "$(SolutionDir)Nuget\lib\$(TargetFramework)\" /Y
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -34,8 +34,8 @@
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="3072"
-     inkscape:window-height="1840"
+     inkscape:window-width="3840"
+     inkscape:window-height="2080"
      inkscape:window-x="-11"
      inkscape:window-y="-11"
      inkscape:window-maximized="1" />
@@ -58,7 +58,7 @@
      transform="translate(0,-197)">
     <path
        transform="rotate(-45)"
-       style="fill:#999999;stroke-width:0.68784261"
+       style="fill:#003380;stroke-width:0.68784261"
        d="m -168.18088,171.87318 h 30.68155 27.08015 c 4.92307,0 8.88641,3.96335 8.88641,8.88642 l 0,58.50222 c 0,4.92308 -3.96334,8.88642 -8.88641,8.88642 l -57.7617,0 c -4.92307,0 -8.88641,-3.96334 -8.88641,-8.88642 l 0,-58.50222 c 0,-4.92307 3.96334,-8.88642 8.88641,-8.88642 z"
        id="rect14"
        inkscape:connector-curvature="0"
