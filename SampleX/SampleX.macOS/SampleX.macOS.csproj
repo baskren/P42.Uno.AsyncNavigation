@@ -30,12 +30,12 @@
     <Profiling>true</Profiling>
     <HttpClientHandler>
     </HttpClientHandler>
-    <LinkMode>
-    </LinkMode>
+    <LinkMode>None</LinkMode>
     <XamMacArch>
     </XamMacArch>
     <NoWarn>
     </NoWarn>
+    <AOTMode>None</AOTMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugSymbols>false</DebugSymbols>
@@ -59,6 +59,7 @@
     </XamMacArch>
     <NoWarn>
     </NoWarn>
+    <AOTMode>None</AOTMode>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

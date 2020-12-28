@@ -67,14 +67,23 @@ namespace P42.Uno.AsyncNavigation
 
         void ArrangePages(Size pageSize)
         {
-#if !NETFX_CORE
+#if __MACOS__
+            if (!exitingOldPage)
+#elif !NETFX_CORE
             if (!exitingOldPage && !enteringNewPage)
 #endif
             {
                 if (BackStack.Any() && BackStack.Peek() is Page backPage)
                     backPage.Arrange(new Rect(Origin, pageSize));
                 if (CurrentPagePresenter is Page currentPage)
-                    currentPage.Arrange(new Rect(Origin, pageSize));
+                {
+#if __MACOS__
+                    if (enteringNewPage)
+                        currentPage.Arrange(new Rect(new Point(pageSize.Width, pageSize.Height), pageSize));
+                    else
+#endif
+                        currentPage.Arrange(new Rect(Origin, pageSize));
+                }
                 if (ForewardStack.Any() && ForewardStack.Peek() is Page nextPage)
                     nextPage.Arrange(new Rect(new Point(pageSize.Width, 0), pageSize));
             }
