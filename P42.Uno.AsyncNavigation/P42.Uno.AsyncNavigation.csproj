@@ -4,37 +4,47 @@
 	Adding project references to this project requires some manual adjustments.
 	Please see https://github.com/unoplatform/uno/issues/3909 for more details.
 	-->
+
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
     <TargetFrameworks>uap10.0.17763;netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid11.0;monoandroid10.0;tizen50</TargetFrameworks>
-    <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
-    <GenerateLibraryLayout>true</GenerateLibraryLayout>
-
-    <PackageId>P42.Uno.AsyncNavigation</PackageId>
-    <PackageIcon>..\Assets\icon.png</PackageIcon>
-    <Summary>P42.Uno.AsyncNavigation: "Xamarin.Forms like" Asynchronous navigation for pre-instantiated UWP / Uno page content</Summary>
-    <PackageTags>uno, windows, uwp, ios, android, tizen, async navigation, uno-platform, page navigation</PackageTags>
-    <Title>P42.Uno.AsyncNavigation</Title>
-    <Description>P42.Uno.AsyncNavigation: "Xamarin.Forms like" Asynchronous navigation for pre-instantiated UWP / Uno page content</Description>
-    <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <AssemblyFileVersion>0.1.0.0</AssemblyFileVersion>
-    <Version>0.1.0</Version>
-    <PackageVersion>0.1.0</PackageVersion>
-    <Authors>42nd Parallel</Authors>
-    <Owners>42nd Parallel</Owners>
-    <NeutralLanguage>en</NeutralLanguage>
-    <Copyright>© 42nd Parallel. All rights reserved.</Copyright>
-    <RepositoryUrl>https://github.com/baskren/P42.Uno.AsyncNavigation</RepositoryUrl>
-    <!--UseFullSemVerForNuGet>false</UseFullSemVerForNuGet-->
-
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
     <TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;monoandroid11.0;monoandroid10.0;tizen50</TargetFrameworks>
-    <GenerateLibraryLayout>true</GenerateLibraryLayout>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+
+    <PackageId>P42.Uno.AsyncNavigation</PackageId>
+    <PackageVersion>0.1.0-pre2</PackageVersion>
+    <Version>0.1.0-pre2</Version>
+    <Authors>42nd Parallel</Authors>
+    <Description>P42.Uno.AsyncNavigation: "Xamarin.Forms like" Asynchronous navigation for pre-instantiated UWP / Uno page content</Description>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>
+      - 0.1.0: Initial Alpha Release
+    </PackageReleaseNotes>
+    <Copyright>© 42nd Parallel. All rights reserved.</Copyright>
+    <PackageTags>uno, windows, uwp, ios, android, tizen, async navigation, uno-platform, page navigation</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+
+    <PackageProjectUrl>https://github.com/baskren/P42.Uno.AsyncNavigation</PackageProjectUrl>
+    <RepositoryType>github</RepositoryType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <Summary>P42.Uno.AsyncNavigation: "Xamarin.Forms like" Asynchronous navigation for pre-instantiated UWP / Uno page content</Summary>
+    <Title>P42.Uno.AsyncNavigation</Title>
+    <Product>P42.Uno.AsyncNavigation</Product>
+    <Owners>42nd Parallel</Owners>
+    <NeutralLanguage>en</NeutralLanguage>
+    <RepositoryUrl>https://github.com/baskren/P42.Uno.AsyncNavigation</RepositoryUrl>
+    <!--UseFullSemVerForNuGet>false</UseFullSemVerForNuGet-->
+
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
 
 
   <PropertyGroup Condition=" '$(Configuration)'=='Release' And '$(OS)' == 'Windows_NT' ">
@@ -56,9 +66,7 @@
   <ItemGroup Condition=" $(TargetFramework.StartsWith('uap')) ">
     <PackageReference Include="Uno.Core" Version="2.1.0" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\LICENSE" PackagePath="" Pack="true" />
-    <None Include="..\Assets\icon.png" PackagePath="icon.png" Pack="true" />    
+  <ItemGroup>    
 
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     <Compile Update="**\*.xaml.cs">
@@ -68,10 +76,14 @@
   <ItemGroup>
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(Configuration)'=='Release' And  '$(OS)'=='Windows_NT'  And '$(SolutionName)'=='P42.Uno.AsyncNavigation' ">
-      mkdir "$(SolutionDir)NuGet\lib" 
-      xcopy "$(TargetDir)P42.Uno.AsyncNavigation.*"  "$(SolutionDir)Nuget\lib\$(TargetFramework)\" /Y
-    </PostBuildEvent>
-  </PropertyGroup>
+  <ItemGroup>
+    <None Include="icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>
