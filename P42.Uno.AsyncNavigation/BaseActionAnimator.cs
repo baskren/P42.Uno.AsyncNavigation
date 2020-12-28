@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace P42.Uno.AsyncNavigation
 {
-    class NormalizedActionAnimator
+    class BaseActionAnimator
 
     {
         public TimeSpan TimeSpan { get; private set; }
@@ -18,7 +18,7 @@ namespace P42.Uno.AsyncNavigation
 
         protected DateTime StartTime;
 
-        public NormalizedActionAnimator(TimeSpan timeSpan, Action<double> action, EasingFunctionBase easingFunction = null)
+        public BaseActionAnimator(TimeSpan timeSpan, Action<double> action, EasingFunctionBase easingFunction = null)
         {
             TimeSpan = timeSpan;
             EasingFunction = easingFunction;
@@ -28,14 +28,17 @@ namespace P42.Uno.AsyncNavigation
         public async Task RunAsync()
         {
             StartTime = DateTime.Now;
-            double normalTime = 0.0;
+            var normalTime = 0.0;
             do
             {
                 await Task.Delay(10);
-                normalTime = Math.Min((DateTime.Now - StartTime).TotalMilliseconds / TimeSpan.TotalMilliseconds,1.0);
-                var normalValue = EasingFunction?.Ease(normalTime) ?? normalTime;
-                var value = Value(normalValue);
-                Action(value);
+                normalTime = Math.Min((DateTime.Now - StartTime).TotalMilliseconds / TimeSpan.TotalMilliseconds, 1.0);
+#if NETFX_CORE
+                var value = EasingFunction?.Ease(normalTime) ?? normalTime;
+#else
+                var value = EasingFunction?.Ease(normalTime, 0, 1, 1) ?? normalTime;
+#endif
+                Action?.Invoke(value);
             }
             while (normalTime < 1.0);
         }
@@ -46,3 +49,4 @@ namespace P42.Uno.AsyncNavigation
         }
     }
 }
+

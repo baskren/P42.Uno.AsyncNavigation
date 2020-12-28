@@ -1,5 +1,7 @@
-# P42.Uno.AsyncNavigation
+# [ALPHA] P42.Uno.AsyncNavigation
 "Xamarin.Forms like" Asynchronous navigation for pre-instantiated UWP / Uno page content
+
+**NOTE:** This project is in preliminary development and supports only the most basic navigation functionality.  If there are features you would like to see, please submit an issue.
 
 ## Purpose
 The Xamarin.Forms NavigationPage is the basis for page navigation in Xamarin.Forms.  There are two parts to it that are very convenient:
@@ -9,8 +11,7 @@ The Xamarin.Forms NavigationPage is the basis for page navigation in Xamarin.For
 
 Both of these characteristics make it easy to sequence app logic based upon where things are in the navigation proesses.  For example, having the two above features makes it trivial to provide busy indicators while viewmodels are views being generated.
 
-So, in UWP, how do you capture the beginning and end of the page loading cycle?  Turns out it's pretty complicated and subject 
-to variation between operating systems.  This is because, in UWP, navigation has been architected quite differently.  Pages are instantiated and presented at once by calling the app's Frame's `Navigate` method, using the new page's type as an argument.  The downside to this approach is you don't have a handle on the new page object before navigation starts - and thus it's really hard to know when the page is done instantiating, loading, and rendering.
+In UWP, page navigation is a bit more [abstract](https://docs.microsoft.com/en-us/windows/uwp/design/basics/navigate-between-two-pages) - with the Application's Frame handling the page instantiation and presentation out of scope.  In other words, pages are instantiated and presented at once by calling the app's Frame's `Navigate` method, using the new page's type as an argument.  The downside to this approach is you don't have a handle on the new page object before navigation starts - and thus it's really hard to know when the page is done instantiating, loading, and rendering.
 
 But there are times when you want to pre-load as much of a page as you can *before* you start a navigation event.  Perhaps the page is a bit bigger than you would like and it's being rendered on a very slow device - like a page with a list view with complex cells in Uno Wasm app?  Or maybe you're porting a Xamarin.Forms application and you really would like a navigation model that won't require a big tear up?
 
@@ -81,4 +82,20 @@ Correspondingly, you can asynchronously pop pages (that have been asynchronously
             await StopProgressAnimation();  // your code to hide the progress indicator shown above
         }
 ```
+
+## Animation Options
+
+Both `PushAsync` and `PopAsync` support an optional argument of the type `PageAnimationOptions`.  This type has the following properties:
+
+- `AnimationDirection`, the direction of the page animation.  
+  - `None`
+  - `LeftToRight`
+  - `RightToLeft`
+  - `TopToBottom`
+  - `BottomToTop`
+
+  **NOTE:** The default for entrance (`PushAsync`) is `RightToLeft`.  The default for exit (`PopAsync`) is the opposite of what ever the entrance was for that page.
+- `ShouldFade`, should the page fade in/out during entrance / exit?  Default: `true`.
+- `Duration`, what is the `TimeSpan` of the animation?  Default: `TimeSpan.FromMilliseconds(600)`.
+- `EasingFunction`, what is the easing function to be used?  Default: `CubicEasing`.
 

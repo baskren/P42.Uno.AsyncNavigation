@@ -52,6 +52,20 @@ namespace P42.Uno.AsyncNavigation
         #endregion ArrangedTaskCompletionSource Property
 
 
+        #region EntranceAnimationOptions Property
+        public static readonly DependencyProperty EntranceAnimationOptionsProperty = DependencyProperty.RegisterAttached(
+            "EntranceAnimationOptions",
+            typeof(PageAnimationOptions),
+            typeof(NavigationExtensions),
+            new PropertyMetadata(default(PageAnimationOptions))
+        );
+        public static PageAnimationOptions GetEntranceAnimationOptions(this PagePresenter element)
+            => (PageAnimationOptions)element.GetValue(EntranceAnimationOptionsProperty);
+        public static void SetEntranceAnimationOptions(this PagePresenter element, PageAnimationOptions value)
+            => element.SetValue(EntranceAnimationOptionsProperty, value);
+        #endregion EntranceAnimationOptions Property
+
+
 
         public static async Task<bool> PushAsync(this FrameworkElement currentElement, Page page, NavigationTransitionInfo transitionInfo = null)
         {

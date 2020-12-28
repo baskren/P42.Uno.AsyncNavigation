@@ -1,0 +1,16 @@
+diff a/P42.Uno.AsyncNavigation/P42.Uno.AsyncNavigation.csproj b/P42.Uno.AsyncNavigation/P42.Uno.AsyncNavigation.csproj	(rejected hunks)
+@@ -31,7 +31,13 @@
+     <PackageReference Include="Uno.UI" Version="3.4.0" />
+   </ItemGroup>
+   <ItemGroup>
+-    <Page Update="NavigationPage.xaml">
++    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
++    <Compile Include="**\*.cs" Exclude="**\*.xaml.cs"/>
++    <Compile Include="**\*.xaml.cs">
++      <DependentUpon>%(Filename)</DependentUpon>
++    </Compile>
++    <EmbeddedResource Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml">
++      <Generator>MSBuild:Compile</Generator>
+       <SubType>Designer</SubType>
+     </EmbeddedResource>
+   </ItemGroup>

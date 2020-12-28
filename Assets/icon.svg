@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="C:\Users\ben\Development\Uno\SpanCalc\Bc3\P42.Uno.AsyncNavigation\Assets\icon.png"
+   inkscape:export-xdpi="32.509998"
+   inkscape:export-ydpi="32.509998">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.8576923"
+     inkscape:cx="147.99172"
+     inkscape:cy="195.71429"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="3072"
+     inkscape:window-height="1840"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-197)">
+    <path
+       transform="rotate(-45)"
+       style="fill:#999999;stroke-width:0.68784261"
+       d="m -168.18088,171.87318 h 30.68155 27.08015 c 4.92307,0 8.88641,3.96335 8.88641,8.88642 l 0,58.50222 c 0,4.92308 -3.96334,8.88642 -8.88641,8.88642 l -57.7617,0 c -4.92307,0 -8.88641,-3.96334 -8.88641,-8.88642 l 0,-58.50222 c 0,-4.92307 3.96334,-8.88642 8.88641,-8.88642 z"
+       id="rect14"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="scssssssss" />
+    <text
+       id="text3724"
+       y="263.67639"
+       x="61.8498"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.49866486px;line-height:1.25;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#80b3ff;fill-opacity:1;stroke:none;stroke-width:1.16246665"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.49866486px;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#80b3ff;stroke-width:1.16246665"
+         y="263.67639"
+         x="61.8498"
+         id="tspan3722"
+         sodipodi:role="line">2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.49866486px;line-height:1.25;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#80ffb3;fill-opacity:1;stroke:none;stroke-width:1.16246665"
+       x="36.434105"
+       y="263.4834"
+       id="text3728"><tspan
+         sodipodi:role="line"
+         id="tspan3726"
+         x="36.434105"
+         y="263.4834"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.49866486px;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#80ffb3;stroke-width:1.16246665">4</tspan></text>
+    <text
+       id="text3732"
+       y="263.5061"
+       x="13.304513"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.49866486px;line-height:1.25;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ff8080;fill-opacity:1;stroke:none;stroke-width:1.16246665"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.49866486px;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ff8080;stroke-width:1.16246665"
+         y="263.5061"
+         x="13.304513"
+         id="tspan3730"
+         sodipodi:role="line">P</tspan></text>
+  </g>
+</svg>

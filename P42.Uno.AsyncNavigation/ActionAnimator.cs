@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace P42.Uno.AsyncNavigation
 {
-    class ActionAnimator : NormalizedActionAnimator
+    class ActionAnimator : BaseActionAnimator
     {
         public double From { get; private set; }
 

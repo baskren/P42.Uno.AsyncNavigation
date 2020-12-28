@@ -23,19 +23,19 @@ namespace P42.Uno.AsyncNavigation
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NavigationPanel : Panel
+    public partial class NavigationPanel : Panel
     {
         readonly static Point Origin = new Point();
         internal Stack<PagePresenter> BackStack = new Stack<PagePresenter>();
         internal PagePresenter CurrentPagePresenter;
         internal Page CurrentPage => CurrentPagePresenter?.Content as Page;
         internal Stack<PagePresenter> ForewardStack = new Stack<PagePresenter>();
+        bool enteringNewPage;
+        bool exitingOldPage;
 
         internal bool CanGoBack => BackStack.Any();
 
         static Task<bool> CurrentNavigationTask { get; set; }
-
-        bool IsAnimated = true;
 
         public NavigationPanel()
         {
@@ -67,15 +67,20 @@ namespace P42.Uno.AsyncNavigation
 
         void ArrangePages(Size pageSize)
         {
-            if (BackStack.Any() && BackStack.Peek() is Page backPage)
-                backPage.Arrange(new Rect(Origin, pageSize));
-            if (CurrentPagePresenter is Page currentPage)
-                currentPage.Arrange(new Rect(Origin, pageSize));
-            if (ForewardStack.Any() && ForewardStack.Peek() is Page nextPage)
-                nextPage.Arrange(new Rect(new Point(pageSize.Width, 0), pageSize));
+#if !NETFX_CORE
+            if (!exitingOldPage && !enteringNewPage)
+#endif
+            {
+                if (BackStack.Any() && BackStack.Peek() is Page backPage)
+                    backPage.Arrange(new Rect(Origin, pageSize));
+                if (CurrentPagePresenter is Page currentPage)
+                    currentPage.Arrange(new Rect(Origin, pageSize));
+                if (ForewardStack.Any() && ForewardStack.Peek() is Page nextPage)
+                    nextPage.Arrange(new Rect(new Point(pageSize.Width, 0), pageSize));
+            }
         }
 
-        public async Task<bool> PushAsync(Page page)
+        public async Task<bool> PushAsync(Page page, PageAnimationOptions pageAnimationOptions = null)
         {
             if (page is null)
                 return false;
@@ -84,26 +89,26 @@ namespace P42.Uno.AsyncNavigation
             if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
                 await CurrentNavigationTask;
 
-            CurrentNavigationTask = PushAsyncInner(page);
+            CurrentNavigationTask = PushAsyncInner(page, pageAnimationOptions);
             var result = await CurrentNavigationTask;
             //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PushAsync EXIT  page:" + page);
             return result;
         }
 
-        public async Task<bool> PopAsync()
+        public async Task<bool> PopAsync(PageAnimationOptions pageAnimationOptions = null)
         {
             //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PopAsync ENTER  page:" + CurrentPage);
             if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
                 await CurrentNavigationTask;
 
-            CurrentNavigationTask = PopAsyncInner();
+            CurrentNavigationTask = PopAsyncInner(pageAnimationOptions);
             var result =  await CurrentNavigationTask;
             //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PopAsync EXIT  page:" + CurrentPage);
             return result;
         }
 
 
-        async Task<bool> PushAsyncInner(Page page)
+        async Task<bool> PushAsyncInner(Page page, PageAnimationOptions pageAnimationOptions)
         {
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner ENTER [" + page.Content+"]");
 
@@ -112,6 +117,8 @@ namespace P42.Uno.AsyncNavigation
             ForewardStack.Clear();
 
             var presenter = new PagePresenter(page);
+            pageAnimationOptions = pageAnimationOptions ?? new PageAnimationOptions();
+            presenter.SetEntranceAnimationOptions(pageAnimationOptions);
 
             if (CurrentPagePresenter is null)
                 CurrentPagePresenter = presenter;
@@ -121,6 +128,7 @@ namespace P42.Uno.AsyncNavigation
             var tcs = new TaskCompletionSource<bool>();
             presenter.SetLoadedTaskCompletedSource(tcs);
 
+            enteringNewPage = true;
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner A1 [" + page.Content + "]");
             Children.Add(presenter);
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner A2 [" + page.Content + "]");
@@ -132,14 +140,13 @@ namespace P42.Uno.AsyncNavigation
             {
                 BackStack.Push(CurrentPagePresenter);
                 CurrentPagePresenter = ForewardStack.Pop();
-                if (IsAnimated)
+                if (pageAnimationOptions.AnimationDirection > AnimationDirection.None || pageAnimationOptions.ShouldFade)
                 {
                     var size = new Size(ActualWidth, ActualHeight);
-                    var animator = new ActionAnimator(ActualWidth, 0,
-                                            TimeSpan.FromMilliseconds(300),
-                                            x => CurrentPagePresenter.Arrange(new Rect(new Point(x, 0), size))
-                                            //new ExponentialEase { Exponent=7.0, EasingMode = EasingMode.EaseOut  },
-                                            //new CubicEase { EasingMode = EasingMode.EaseOut },
+                    var animator = new BaseActionAnimator(
+                                            pageAnimationOptions.Duration,
+                                            pageAnimationOptions.ToEntranceAction(CurrentPagePresenter,size),
+                                            pageAnimationOptions.EasingFunction
                                             );
                     await animator.RunAsync();
                 }
@@ -152,47 +159,43 @@ namespace P42.Uno.AsyncNavigation
                     await tcs.Task;
                 }
             }
+            enteringNewPage = false;
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner EXIT [" + page.Content + "]");
             return true;
         }
 
-        public async Task<bool> PopAsyncInner()
+        public async Task<bool> PopAsyncInner(PageAnimationOptions pageAnimationOptions)
         {
             if (!BackStack.Any())
                 return false;
 
-
-            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner ENTER [" + CurrentPage + "]");
             if (CurrentPagePresenter is PagePresenter presenter)
             {
+                pageAnimationOptions = pageAnimationOptions ?? presenter.GetEntranceAnimationOptions().FlipDirection();
                 ForewardStack.Push(CurrentPagePresenter);
                 CurrentPagePresenter = BackStack.Pop();
 
-                if (IsAnimated)
+                exitingOldPage = true;
+                if (pageAnimationOptions.AnimationDirection > AnimationDirection.None || pageAnimationOptions.ShouldFade)
                 {
                     var size = new Size(ActualWidth, ActualHeight);
-                    var animator = new ActionAnimator(0, ActualWidth,
-                                            TimeSpan.FromMilliseconds(150),
-                                            x => presenter.Arrange(new Rect(new Point(x, 0), size))
-                                            //new CubicEase { EasingMode = EasingMode.EaseOut },
+                    var animator = new BaseActionAnimator(
+                                            pageAnimationOptions.Duration,
+                                            pageAnimationOptions.ToExitAction(presenter, size),
+                                            pageAnimationOptions.EasingFunction
                                             );
                     await animator.RunAsync();
                 }
+                exitingOldPage = false;
 
-                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner A [" + presenter.Content + "]");
                 var tcs = new TaskCompletionSource<bool>();
                 presenter.SetUnloadTaskCompletionSource(tcs);
 
-                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner B [" + presenter.Content + "]");
                 Children.Remove(presenter);
 
-                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner C [" + presenter.Content + "]");
                 var result = await tcs.Task;
-
-                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner EXIT' [" + presenter.Content + "]");
                 return result;
             }
-            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PopAsyncInner EXIT [" + CurrentPage + "]");
             return false;
         }
     }
