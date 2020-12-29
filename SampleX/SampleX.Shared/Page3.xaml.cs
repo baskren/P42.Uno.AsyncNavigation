@@ -26,6 +26,11 @@ namespace SampleX
         public Page3()
         {
             this.InitializeComponent();
+            this.SetTitle(nameof(Page3));
+            this.SetBackButtonTitle("RETURN");
+            this.SetIcon(new SymbolIcon { Symbol = Symbol.Refresh });
+            this.SetIconColor(Windows.UI.Colors.Blue);
+
         }
 
         async void _backwardsClick(object sender, RoutedEventArgs e)

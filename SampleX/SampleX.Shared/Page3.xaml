@@ -11,7 +11,10 @@
     <Page.Content>
         <Grid Background="Blue">
             <Grid.Children>
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="10">
                     <StackPanel.Children>
                         <TextBlock Text="PAGE 3" />
                         <Button

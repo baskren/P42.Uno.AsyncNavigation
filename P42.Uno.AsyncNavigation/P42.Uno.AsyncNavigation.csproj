@@ -18,13 +18,26 @@
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
     <PackageId>P42.Uno.AsyncNavigation</PackageId>
-    <PackageVersion>0.1.0</PackageVersion>
-    <Version>0.1.0</Version>
+    <PackageVersion>0.2.0</PackageVersion>
+    <Version>0.2.0</Version>
     <Authors>42nd Parallel</Authors>
     <Description>P42.Uno.AsyncNavigation: "Xamarin.Forms like" Asynchronous navigation for pre-instantiated UWP / Uno page content</Description>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
       - 0.1.0: Initial Alpha Release
+      - 0.2.0: Added the following Page extension methods:
+          - `public static bool GetHasNavigationBar(this Page page)`
+          - `public static void SetHasNavigationBar(this Page page, bool value)`
+          - `public static bool GetHasBackButton(this Page page)`
+          - `public static void SetHasBackButton(this Page page, bool value)`
+          - `public static string GetBackButtonTitle(this Page page)`
+          - `public static void SetBackButtonTitle(this Page page, string value)`
+          - `public static object GetTitle(this Page page)`
+          - `public static void SetTitle(this Page page, object value)`
+          - `public static IconElement GetIcon(this Page page)`
+          - `public static void SetIcon(this Page page, IconElement value)`
+          - `public static Color GetIconColor(this Page page)`
+          - `public static void SetIconColor(this Page page, Color value)`
     </PackageReleaseNotes>
     <Copyright>© 42nd Parallel. All rights reserved.</Copyright>
     <PackageTags>uno, windows, uwp, ios, android, tizen, async navigation, uno-platform, page navigation</PackageTags>

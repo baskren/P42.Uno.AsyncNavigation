@@ -26,6 +26,10 @@ namespace SampleX
         public Page1()
         {
             this.InitializeComponent();
+            this.SetTitle(nameof(Page1));
+            this.SetBackButtonTitle("HOME");
+            this.SetIcon(new SymbolIcon { Symbol = Symbol.Save });
+            this.SetIconColor(Windows.UI.Colors.Red);
         }
 
         async void _forwardsClick(object sender, RoutedEventArgs e)

@@ -117,6 +117,19 @@ namespace P42.Uno.AsyncNavigation
         }
         #endregion
 
+        /// <summary>
+        /// Method called when NavBar's Back Button is pressed.  Can be intercepted to override page
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public virtual async Task OnBackButtonClickedAsync(object sender, RoutedEventArgs e)
+        {
+            if (sender is Page page)
+                await page.PopAsync();
+        }
+
+
 
         #endregion
 

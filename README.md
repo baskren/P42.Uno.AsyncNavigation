@@ -99,3 +99,42 @@ Both `PushAsync` and `PopAsync` support an optional argument of the type `PageAn
 - `Duration`, what is the `TimeSpan` of the animation?  Default: `TimeSpan.FromMilliseconds(600)`.
 - `EasingFunction`, what is the easing function to be used?  Default: `CubicEasing`.
 
+## Navigation Bar
+
+To make transitioning from Xamarin.Forms easier, here are a few extensions methods you might find helpful.
+
+### HasNavigationBar
+Indicates the display of the page's navigation bar, positioned at the top of the page.
+
+- `public static bool GetHasNavigationBar(this Page page)`: Returns a value that indicates whether the page has a navigation bar. Default: `true`.
+- `public static void SetHasNavigationBar(this Page page, bool value)`: Sets a value that indicates whether or not this NavigationPage Page has a navigation bar.
+
+### HasBackButton
+Indicates the display of the page's Back Button, positioned on the left of the page's navigation bar.
+
+- `public static bool GetHasBackButton(this Page page)`: Returns a value that indicates whether page has a back button. Default: `true`.
+- `public static void SetHasBackButton(this Page page, bool value)`:  Sets a value that indicates whether page has a back button.
+
+### BackButtonTitle
+The title text for the page's back button, positioned to the right of the Back icon (which is on the left side of the page's navigation bar).
+
+- `public static string GetBackButtonTitle(this Page page)`: Returns the title of the back button for the specified page. Default: `default(string)`.
+- `public static void SetBackButtonTitle(this Page page, string value)`: Sets the title of the back button for the specified page.
+
+### Title
+The page's title element, positioned at the center of the page's navigation bar.
+
+- `public static object GetTitle(this Page page)`: Returns the page's title element (could be a `string` or a `FrameworkElement`).  Default: `default(object)`.
+- `public static void SetTitle(this Page page, object value)`: Sets the page's title element (could be a `string` or a `FrameworkElement`). 
+
+### Icon
+The page's navigation bar IconElement, positioned to the left of the Title.
+
+- `public static IconElement GetIcon(this Page page)`: Sets the page's IconElement.  Default: `default(IconElement)`.
+- `public static void SetIcon(this Page page, IconElement value)`: Sets the page's IconElement.
+
+### IconColor
+The color of the page's icon.
+
+- `public static Color GetIconColor(this Page page)`: Returns the page's title icon's color.  Default: default system text/icon color.
+- `public static void SetIconColor(this Page page, Color value)`: Set the page's title icon's color.
