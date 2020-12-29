@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,6 +27,197 @@ namespace P42.Uno.AsyncNavigation
     public partial class NavigationPage : Page
     {
         #region Public Implementation
+
+
+        #region Attached Properties 
+
+        #region HasNavigationBar Property
+        public static readonly DependencyProperty HasNavigationBarProperty = DependencyProperty.RegisterAttached(
+            "HasNavigationBar",
+            typeof(bool),
+            typeof(NavigationExtensions),
+            new PropertyMetadata(true, OnHasNavigationBarChanged)
+        );
+        static void OnHasNavigationBarChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Page page && page.FindAncestor<PagePresenter>() is PagePresenter presenter)
+            {
+                presenter.NavBar.Visibility = page.GetHasBackButton()
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+        }
+        /// <summary>
+        /// Returns presence of Navigation Bar
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns><see langword="true"/> if page has a Navigation Bar</returns>
+        public static bool GetHasNavigationBar(Page page)
+            => (bool)page.GetValue(HasNavigationBarProperty);
+        /// <summary>
+        /// Sets presence of Navigation Bar
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="value"></param>
+        public static void SetHasNavigationBar(Page page, bool value)
+            => page.SetValue(HasNavigationBarProperty, value);
+        #endregion HasNavigationBar Property
+
+        #region Title Property
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.RegisterAttached(
+            "Title",
+            typeof(object),
+            typeof(NavigationExtensions),
+            new PropertyMetadata(default(object), OnTitleChanged)
+        );
+        static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Page page && page.FindAncestor<PagePresenter>() is PagePresenter presenter)
+            {
+                presenter.TitleContentPresenter.Content = page.GetTitle();
+            }
+        }
+        /// <summary>
+        /// Get title displayed in page's navigation bar
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns>title object</returns>
+        public static object GetTitle(Page page)
+            => (object)page.GetValue(TitleProperty);
+        /// <summary>
+        /// Sets title displayed in page's navigation bar
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="value"></param>
+        public static void SetTitle(Page page, object value)
+            => page.SetValue(TitleProperty, value);
+        #endregion Title Property
+
+        #region HasBackButton Property
+        public static readonly DependencyProperty HasBackButtonProperty = DependencyProperty.RegisterAttached(
+            "HasBackButton",
+            typeof(bool),
+            typeof(NavigationExtensions),
+            new PropertyMetadata(true, OnHasBackButtonChanged)
+        );
+        static void OnHasBackButtonChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Page page && page.FindAncestor<PagePresenter>() is PagePresenter presenter)
+            {
+                presenter.BackButton.Visibility = page.GetHasBackButton()
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+        }
+        /// <summary>
+        /// Gets the presence of the back button for the page
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns>bool</returns>
+        public static bool GetHasBackButton(Page page)
+            => (bool)page.GetValue(HasBackButtonProperty);
+        /// <summary>
+        /// Sets the presence of the back button for the page
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="value"></param>
+        public static void SetHasBackButton(Page page, bool value)
+            => page.SetValue(HasBackButtonProperty, value);
+        #endregion HasBackButton Property
+
+        #region BackButtonTitle Property
+        public static readonly DependencyProperty BackButtonTitleProperty = DependencyProperty.RegisterAttached(
+            "BackButtonTitle",
+            typeof(string),
+            typeof(NavigationExtensions),
+            new PropertyMetadata(default(string), OnBackButtonTitleChanged)
+        );
+        static void OnBackButtonTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Page page && page.FindAncestor<PagePresenter>() is PagePresenter presenter)
+            {
+                presenter.BackButtonTextPresenter.Content = page.GetBackButtonTitle();
+            }
+        }
+        /// <summary>
+        /// Gets the back button's title
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns>string</returns>
+        public static string GetBackButtonTitle(Page page)
+            => (string)page.GetValue(BackButtonTitleProperty);
+        /// <summary>
+        /// Sets the back button's title
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="value"></param>
+        public static void SetBackButtonTitle(Page page, string value)
+            => page.SetValue(BackButtonTitleProperty, value);
+        #endregion BackButtonTitle Property
+
+        #region IconColor Property
+        public static readonly DependencyProperty IconColorProperty = DependencyProperty.RegisterAttached(
+            "IconColor",
+            typeof(Color),
+            typeof(NavigationExtensions),
+            new PropertyMetadata(default(Color), OnIconColorChanged)
+        );
+        static void OnIconColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Page page && page.FindAncestor<PagePresenter>() is PagePresenter presenter)
+            {
+                presenter.IconContentPresenter.Foreground = new SolidColorBrush(page.GetIconColor());
+            }
+        }
+        /// <summary>
+        /// Get's the page's icon color
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns>Color</returns>
+        public static Color GetIconColor(Page page)
+            => (Color)page.GetValue(IconColorProperty);
+        /// <summary>
+        /// Sets the page's icon color
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="value"></param>
+        public static void SetIconColor(Page page, Color value)
+            => page.SetValue(IconColorProperty, value);
+        #endregion IconColor Property
+
+        #region Icon Property
+        public static readonly DependencyProperty IconProperty = DependencyProperty.RegisterAttached(
+            "Icon",
+            typeof(IconElement),
+            typeof(NavigationExtensions),
+            new PropertyMetadata(default(IconElement), OnIconChanged)
+        );
+        static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Page page && page.FindAncestor<PagePresenter>() is PagePresenter presenter)
+            {
+                presenter.IconContentPresenter.Content = page.GetIcon();
+            }
+        }
+        /// <summary>
+        /// Gets the page's Icon
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns>IconElement</returns>
+        public static IconElement GetIcon(Page page)
+            => (IconElement)page.GetValue(IconProperty);
+        /// <summary>
+        /// Sets the page's Icon
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="value"></param>
+        public static void SetIcon(Page page, IconElement value)
+            => page.SetValue(IconProperty, value);
+        #endregion Icon Property
+
+
+
+        #endregion
 
         #region Properties
         /// <summary>

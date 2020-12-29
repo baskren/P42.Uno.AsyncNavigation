@@ -35,10 +35,10 @@ namespace SampleX
 
         async void _backwardsClick(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] Page3._backwardsClick ENTER  [" + this.NavigationPage().StackCount + "]");
+            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] Page3._backwardsClick ENTER  [" + this.GetNavigationPage().StackCount + "]");
             //await P42.Uno.AsyncNavigation.Navigation.PopAsync();
             await this.PopAsync();
-            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] Page3._backwardsClick EXIT  [" + this.NavigationPage()?.StackCount + "]");
+            System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] Page3._backwardsClick EXIT  [" + this.GetNavigationPage()?.StackCount + "]");
         }
 
     }
