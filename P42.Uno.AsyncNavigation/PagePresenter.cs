@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
 namespace P42.Uno.AsyncNavigation
@@ -29,20 +31,34 @@ namespace P42.Uno.AsyncNavigation
             }
         };
 
-        internal RelativePanel NavBar = new RelativePanel();
-
-        internal ContentPresenter TitleContentPresenter = new ContentPresenter();
-
-        /*
-        internal AppBarButton BackButton = new AppBarButton
+        internal Grid NavBar = new Grid
         {
-            Icon = new SymbolIcon { Symbol = Symbol.Back },
-            LabelPosition = CommandBarLabelPosition.Collapsed,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Visibility = Visibility.Collapsed
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Top,
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto }
+            }
         };
-        */
+
+        internal StackPanel TitlePanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        internal ContentPresenter TitleContentPresenter = new ContentPresenter
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(5)
+        };
+        internal ContentPresenter IconContentPresenter = new ContentPresenter
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
 
         internal Button BackButton = new Button
         {
@@ -55,12 +71,7 @@ namespace P42.Uno.AsyncNavigation
 
         internal ContentPresenter BackButtonTextPresenter = new ContentPresenter();
 
-        internal ContentPresenter IconContentPresenter = new ContentPresenter
-        {
-            Margin = new Thickness(0,0,5,0)
-        };
-
-        Page Page;
+        internal Page Page;
 
         public PagePresenter()
         {
@@ -70,13 +81,24 @@ namespace P42.Uno.AsyncNavigation
 
             Background = new SolidColorBrush((Color)Application.Current.Resources["SystemAltHighColor"]);
 
-            RelativePanel.SetAlignHorizontalCenterWithPanel(TitleContentPresenter, true);
-            RelativePanel.SetAlignVerticalCenterWithPanel(TitleContentPresenter, true);
-            NavBar.Children.Add(TitleContentPresenter);
+            //RelativePanel.SetAlignHorizontalCenterWithPanel(TitleContentPresenter, true);
+            //RelativePanel.SetAlignVerticalCenterWithPanel(TitleContentPresenter, true);
 
-            RelativePanel.SetLeftOf(IconContentPresenter, TitleContentPresenter);
-            RelativePanel.SetAlignVerticalCenterWithPanel(IconContentPresenter, true);
-            NavBar.Children.Add(IconContentPresenter);
+            if (Application.Current.Resources["TitleTextBlockStyle"] is Windows.UI.Text.FontStyle headerFontStyle)
+                TitleContentPresenter.FontStyle = headerFontStyle;
+            else
+            {
+                TitleContentPresenter.FontWeight = Windows.UI.Text.FontWeights.Bold;
+                TitleContentPresenter.FontSize = 20;
+            }
+
+            TitlePanel.Children.Add(IconContentPresenter);
+            TitlePanel.Children.Add(TitleContentPresenter);
+            NavBar.Children.Add(TitlePanel);
+
+            //RelativePanel.SetLeftOf(IconContentPresenter, TitleContentPresenter);
+            //RelativePanel.SetAlignVerticalCenterWithPanel(IconContentPresenter, true);
+            //NavBar.Children.Add(IconContentPresenter);
 
             BackButton.Content = new StackPanel
             {
@@ -96,7 +118,27 @@ namespace P42.Uno.AsyncNavigation
             _grid.Children.Add(NavBar);
 
             Content = _grid;
+
+            KeyboardAccelerator GoBack = new KeyboardAccelerator();
+            GoBack.Key = VirtualKey.GoBack;
+            GoBack.Invoked += BackInvoked;
+            KeyboardAccelerator AltLeft = new KeyboardAccelerator();
+            AltLeft.Key = VirtualKey.Left;
+            AltLeft.Invoked += BackInvoked;
+            this.KeyboardAccelerators.Add(GoBack);
+            this.KeyboardAccelerators.Add(AltLeft);
+            // ALT routes here
+            AltLeft.Modifiers = VirtualKeyModifiers.Menu;
+
         }
+
+        async void BackInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (this.FindAncestor<NavigationPage>() is NavigationPage navPage)
+                await navPage.OnBackButtonClickedAsync(Page, null);
+            args.Handled = true;
+        }
+
 
         async void OnBackButtonClickedAsync(object sender, RoutedEventArgs e)
         {

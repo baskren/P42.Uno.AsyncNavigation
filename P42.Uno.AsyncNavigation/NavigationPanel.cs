@@ -126,6 +126,7 @@ namespace P42.Uno.AsyncNavigation
             ForewardStack.Clear();
 
             var presenter = new PagePresenter(page, CurrentPagePresenter != null);
+
             pageAnimationOptions = pageAnimationOptions ?? new PageAnimationOptions();
             presenter.SetEntranceAnimationOptions(pageAnimationOptions);
 

@@ -219,6 +219,7 @@ namespace P42.Uno.AsyncNavigation
 
         #endregion
 
+
         #region Properties
         /// <summary>
         /// The current page on the Async Navigation Stack
