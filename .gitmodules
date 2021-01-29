@@ -1,0 +1,3 @@
+[submodule "P42.Uno.Xamarin.Essentials"]
+	path = P42.Uno.Xamarin.Essentials
+	url = https://github.com/baskren/Essentials.git
