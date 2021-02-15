@@ -51,7 +51,8 @@ namespace P42.Uno.AsyncNavigation
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5)
+            Margin = new Thickness(5),
+            Foreground = new SolidColorBrush((Color)Application.Current.Resources["SystemAccentColor"])
         };
         internal ContentPresenter IconContentPresenter = new ContentPresenter
         {
