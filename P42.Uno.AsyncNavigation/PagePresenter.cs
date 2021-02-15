@@ -120,6 +120,7 @@ namespace P42.Uno.AsyncNavigation
 
             Content = _grid;
 
+            /*
             KeyboardAccelerator GoBack = new KeyboardAccelerator();
             GoBack.Key = VirtualKey.GoBack;
             GoBack.Invoked += BackInvoked;
@@ -130,7 +131,7 @@ namespace P42.Uno.AsyncNavigation
             this.KeyboardAccelerators.Add(AltLeft);
             // ALT routes here
             AltLeft.Modifiers = VirtualKeyModifiers.Menu;
-
+            */
         }
 
         async void BackInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
