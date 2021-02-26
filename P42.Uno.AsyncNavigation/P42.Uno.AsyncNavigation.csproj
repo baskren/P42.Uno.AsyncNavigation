@@ -71,10 +71,10 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.4.0" />    
+    <PackageReference Include="Uno.UI" Version="3.5.1" />    
   </ItemGroup>
   <ItemGroup Condition=" $(TargetFramework.StartsWith('uap')) ">
-    <PackageReference Include="Uno.Core" Version="2.1.0" />
+    <PackageReference Include="Uno.Core" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>    
 
