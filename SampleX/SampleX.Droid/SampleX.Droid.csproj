@@ -89,9 +89,9 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\P42.Uno.AsyncNavigation\P42.Uno.AsyncNavigation.csproj">
-      <Project>{0424d5ef-87d6-401e-98de-203c14a3cc0d}</Project>
-      <Name>P42.Uno.AsyncNavigation</Name>
+    <ProjectReference Include="..\..\P42.Uno.AsyncNavigation\P42.Uno.AsyncNavigation.Android.csproj">
+      <Project>{abbcd412-7514-484a-848f-49794d22b5b2}</Project>
+      <Name>P42.Uno.AsyncNavigation.Android</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\SampleX.Shared\SampleX.Shared.projitems" Label="Shared" Condition="Exists('..\SampleX.Shared\SampleX.Shared.projitems')" />

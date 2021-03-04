@@ -45,7 +45,7 @@
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.3.6" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\P42.Uno.AsyncNavigation\P42.Uno.AsyncNavigation.csproj" />
+    <ProjectReference Include="..\..\P42.Uno.AsyncNavigation\P42.Uno.AsyncNavigation.WASM.csproj" />
   </ItemGroup>
   <Import Project="..\SampleX.Shared\SampleX.Shared.projitems" Label="Shared" Condition="Exists('..\SampleX.Shared\SampleX.Shared.projitems')" />
 </Project>

@@ -1,0 +1,56 @@
+<Project ToolsVersion="15.0">
+
+  <PropertyGroup>
+
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <AssemblyName>P42.Uno.AsyncNavigation</AssemblyName>
+    <RootNamespace>P42.Uno.AsyncNavigation</RootNamespace>
+
+    <NoWarn>Uno0001</NoWarn>
+
+    <!--
+    Force all projects of this folder to use a different output
+    path to avoid intermediate output collisions
+    -->
+	  <BaseOutputPath>bin\$(MSBuildProjectName)</BaseOutputPath>
+	  <BaseIntermediateOutputPath>obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
+
+    <!-- This is a pretty vanilla project!
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    -->
+	  <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+
+    <DebugType>portable</DebugType>
+
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Uno.UI" Version="3.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>    
+    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <EmbeddedResource Include="LinkerDefinition.Wasm.xml">
+      <LogicalName>$(AssemblyName).xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+
+</Project>
