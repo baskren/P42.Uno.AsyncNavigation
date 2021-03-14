@@ -8,7 +8,7 @@
     <AssemblyName>P42.Uno.AsyncNavigation</AssemblyName>
     <RootNamespace>P42.Uno.AsyncNavigation</RootNamespace>
 
-    <NoWarn>Uno0001</NoWarn>
+    <NoWarn>Uno0001;VSX1000</NoWarn>
 
     <!--
     Force all projects of this folder to use a different output
