@@ -104,25 +104,15 @@ namespace P42.Uno.AsyncNavigation
             return result;
         }
 
-        public async Task<bool> PopAsync(PageAnimationOptions pageAnimationOptions = null)
-        {
-            //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PopAsync ENTER  page:" + CurrentPage);
-            if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
-                await CurrentNavigationTask;
-
-            CurrentNavigationTask = PopAsyncInner(pageAnimationOptions);
-            var result =  await CurrentNavigationTask;
-            //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PopAsync EXIT  page:" + CurrentPage);
-            return result;
-        }
-
-
         async Task<bool> PushAsyncInner(Page page, PageAnimationOptions pageAnimationOptions)
         {
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner ENTER [" + page.Content+"]");
 
             foreach (var child in ForewardStack)
+            {
                 Children.Remove(child);
+                child.Dispose();
+            }
             ForewardStack.Clear();
 
             var presenter = new PagePresenter(page, CurrentPagePresenter != null);
@@ -172,6 +162,18 @@ namespace P42.Uno.AsyncNavigation
             enteringNewPage = false;
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner EXIT [" + page.Content + "]");
             return true;
+        }
+
+        public async Task<bool> PopAsync(PageAnimationOptions pageAnimationOptions = null)
+        {
+            //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PopAsync ENTER  page:" + CurrentPage);
+            if (CurrentNavigationTask != null && !CurrentNavigationTask.IsCompleted)
+                await CurrentNavigationTask;
+
+            CurrentNavigationTask = PopAsyncInner(pageAnimationOptions);
+            var result = await CurrentNavigationTask;
+            //System.Diagnostics.Debug.WriteLine("[" + NavigationPage.Stopwatch.ElapsedMilliseconds + "] P42.Uno.AsyncNavigation.NavigationPanel.PopAsync EXIT  page:" + CurrentPage);
+            return result;
         }
 
         public async Task<bool> PopAsyncInner(PageAnimationOptions pageAnimationOptions)

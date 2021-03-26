@@ -4,7 +4,7 @@
   <PropertyGroup>
     
     <TargetFrameworks>netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;MonoAndroid11.0;MonoAndroid10.0;</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">uap10.0.17763;$(TargetFrameworks);</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">uap10.0.18362;$(TargetFrameworks);</TargetFrameworks>
     
     <PackageId>P42.Uno.AsyncNavigation</PackageId>
     <PackageVersion>0.3.0</PackageVersion>
@@ -66,7 +66,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('uap')) ">
-    <PackageReference Include="Uno.Core" Version="2.2.0" />
+    <PackageReference Include="Uno.Core" Version="2.3.0" />
   </ItemGroup>
   
   <ItemGroup>

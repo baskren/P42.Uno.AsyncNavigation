@@ -241,6 +241,7 @@ namespace P42.Uno.AsyncNavigation
             this.InitializeComponent();
         }
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -253,6 +254,7 @@ namespace P42.Uno.AsyncNavigation
                 PushAsync(instance);
             }
         }
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         #endregion
 

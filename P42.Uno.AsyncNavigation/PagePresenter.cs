@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.System;
@@ -11,7 +12,7 @@ using Windows.UI.Xaml.Media;
 namespace P42.Uno.AsyncNavigation
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public partial class PagePresenter : Page
+    public partial class PagePresenter : Page, IDisposable
     {
         bool _waitingForLoad;
 
@@ -134,34 +135,6 @@ namespace P42.Uno.AsyncNavigation
             */
         }
 
-        async void BackInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            if (this.FindAncestor<NavigationPage>() is NavigationPage navPage)
-                await navPage.OnBackButtonClickedAsync(Page, null);
-            args.Handled = true;
-        }
-
-
-        async void OnBackButtonClickedAsync(object sender, RoutedEventArgs e)
-        {
-            if (this.FindAncestor<NavigationPage>() is NavigationPage navPage)
-                await navPage.OnBackButtonClickedAsync(Page, e);
-        }
-
-        private void OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.PagePresenter.OnUnloaded  ENTER  [" + Content + "]  tcs[" + this.GetLoadedTaskCompletedSource() + "]");
-            if (this.GetUnloadTaskCompletionSource() is TaskCompletionSource<bool> tcs)
-            {
-                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.PagePresenter.OnUnloaded  A1  [" + Content + "]  tcs[" + this.GetLoadedTaskCompletedSource() + "]");
-                this.SetUnloadTaskCompletionSource(null);
-                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.PagePresenter.OnUnloaded  A2  [" + Content + "]  tcs[" + this.GetLoadedTaskCompletedSource() + "]");
-                tcs.SetResult(true);
-                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.PagePresenter.OnUnloaded  A3  [" + Content + "]  tcs[" + this.GetLoadedTaskCompletedSource() + "]");
-            }
-            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.PagePresenter.OnUnloaded  EXIT  [" + Content + "]  tcs[" + this.GetLoadedTaskCompletedSource() + "]");
-        }
-
         public PagePresenter(Page page, bool canGoBack) : this()
         {
             Page = page;
@@ -190,6 +163,68 @@ namespace P42.Uno.AsyncNavigation
             Grid.SetRow(page, 1);
             _grid.Children.Add(page);
 
+        }
+
+        bool _disposed;
+#if NETFX_CORE
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+#else
+        public new void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            base.Dispose();
+        }
+#endif
+
+#if __ANDROID__
+        protected override void Dispose(bool disposing)
+#elif __MACOS__ || __IOS__
+        protected virtual new void Dispose(bool disposing)
+#else
+        protected virtual void Dispose(bool disposing)
+#endif
+        {
+            if (disposing && !_disposed)
+            {
+                _disposed = true;
+                if (Page is IDisposable disposable)
+                    disposable?.Dispose();
+            }
+#if __ANDROID__ || __MACOS__ || __IOS__
+            base.Dispose(disposing);
+#endif
+        }
+
+        async void BackInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (this.FindAncestor<NavigationPage>() is NavigationPage navPage)
+                await navPage.OnBackButtonClickedAsync(Page, null);
+            args.Handled = true;
+        }
+
+        async void OnBackButtonClickedAsync(object sender, RoutedEventArgs e)
+        {
+            if (this.FindAncestor<NavigationPage>() is NavigationPage navPage)
+                await navPage.OnBackButtonClickedAsync(Page, e);
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.PagePresenter.OnUnloaded  ENTER  [" + Content + "]  tcs[" + this.GetLoadedTaskCompletedSource() + "]");
+            if (this.GetUnloadTaskCompletionSource() is TaskCompletionSource<bool> tcs)
+            {
+                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.PagePresenter.OnUnloaded  A1  [" + Content + "]  tcs[" + this.GetLoadedTaskCompletedSource() + "]");
+                this.SetUnloadTaskCompletionSource(null);
+                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.PagePresenter.OnUnloaded  A2  [" + Content + "]  tcs[" + this.GetLoadedTaskCompletedSource() + "]");
+                tcs.SetResult(true);
+                //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.PagePresenter.OnUnloaded  A3  [" + Content + "]  tcs[" + this.GetLoadedTaskCompletedSource() + "]");
+            }
+            //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.PagePresenter.OnUnloaded  EXIT  [" + Content + "]  tcs[" + this.GetLoadedTaskCompletedSource() + "]");
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
