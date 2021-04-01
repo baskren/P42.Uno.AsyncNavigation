@@ -69,6 +69,7 @@ namespace P42.Uno.AsyncNavigation
                 default:
                     return d =>
                     {
+                        pagePresenter.Arrange(new Rect(new Point(0, 0), size));
                         if (options.ShouldFade)
                             pagePresenter.Opacity = d;
                     };

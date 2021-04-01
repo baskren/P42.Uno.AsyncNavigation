@@ -149,17 +149,17 @@ namespace P42.Uno.AsyncNavigation
                                             pageAnimationOptions.EasingFunction
                                             );
                     await animator.RunAsync();
+
                 }
-                else
-                {
+                //else
+                //{
                     tcs = new TaskCompletionSource<bool>();
                     presenter.SetArrangedTaskCompletionSource(tcs);
+                    enteringNewPage = false;
                     InvalidateArrange();
-
                     await tcs.Task;
-                }
+                //}
             }
-            enteringNewPage = false;
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner EXIT [" + page.Content + "]");
             return true;
         }

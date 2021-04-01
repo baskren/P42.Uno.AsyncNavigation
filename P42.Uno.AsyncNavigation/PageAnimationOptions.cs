@@ -21,7 +21,7 @@ namespace P42.Uno.AsyncNavigation
         /// <summary>
         /// Should opacity fade with animation?
         /// </summary>
-        public bool ShouldFade { get; set; } = true;
+        public bool ShouldFade { get; set; } = false;
 
         /// <summary>
         /// Animation duration
