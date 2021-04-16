@@ -41,8 +41,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
     <PackageReference Include="Uno.UI.WebAssembly" Version="3.6.6" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.6" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.2" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\P42.Uno.AsyncNavigation\P42.Uno.AsyncNavigation.WASM.csproj" />
