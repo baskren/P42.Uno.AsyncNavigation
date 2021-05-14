@@ -156,9 +156,6 @@ namespace P42.Uno.AsyncNavigation
                 enteringNewPage = false;
                 InvalidateArrange();
                 await tcs.Task;
-
-                // only needed for Android?
-                page.InvalidateArrange();
             }
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner EXIT [" + page.Content + "]");
             return true;
