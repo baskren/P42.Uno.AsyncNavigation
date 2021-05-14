@@ -151,14 +151,14 @@ namespace P42.Uno.AsyncNavigation
                     await animator.RunAsync();
 
                 }
-                //else
-                //{
-                    tcs = new TaskCompletionSource<bool>();
-                    presenter.SetArrangedTaskCompletionSource(tcs);
-                    enteringNewPage = false;
-                    InvalidateArrange();
-                    await tcs.Task;
-                //}
+                tcs = new TaskCompletionSource<bool>();
+                presenter.SetArrangedTaskCompletionSource(tcs);
+                enteringNewPage = false;
+                InvalidateArrange();
+                await tcs.Task;
+
+                // only needed for Android?
+                page.InvalidateArrange();
             }
             //System.Diagnostics.Debug.WriteLine("P42.Uno.AsyncNavigation.NavigationPanel.PushAsyncInner EXIT [" + page.Content + "]");
             return true;
